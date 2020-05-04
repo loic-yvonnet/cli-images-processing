@@ -5,16 +5,17 @@
 # ../heic_to_pdf.sh my.pdf
 
 # Convert heic to jpg
-mkdir __tmp__heic_jpg
-for file in *.HEIC; do heif-convert -q 75 $file __tmp__heic_jpg/${file}.jpg; done
+mkdir .tmp_heic_to_pdf
+for file in *.HEIC; do heif-convert -q 75 $file .tmp_heic_to_pdf/${file}.jpg; done
 
 # Resize the images
-mkdir __tmp__jpg_resized
-for file in __tmp__heic_jpg/*.jpg; do convert -resize 25% __tmp__heic_jpg/$file __tmp__jpg_resized/$file; done
+cd .tmp_heic_to_pdf
+mkdir resized
+for file in *.jpg; do convert -resize 25% $file resized/$file; done
+cd ..
 
 # Create the PDF (and rotate by 90 degrees so that images appear as expected)
-convert -rotate 90 __tmp__jpg_resized/*.jpg $1
+convert -rotate 90 .tmp_heic_to_pdf/resized/*.jpg $1
 
 # Remove the temporary directories
-rm -rf __tmp__heic_jpg
-rm -rf __tmp__jpg_resized
+rm -rf .tmp_heic_to_pdf
